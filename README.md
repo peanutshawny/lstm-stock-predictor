@@ -65,4 +65,3 @@ Using past price data and sentiment analysis from news and other documents to pr
 ## Cleaning
 
 ## Modeling
->>>>>>> d88e8e27b71e8d2f2da4b662e9bdf1bbc5e38fe5
