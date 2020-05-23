@@ -11,6 +11,8 @@ from keras.layers import Dense, Dropout
 from keras.layers import LSTM
 from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau, CSVLogger
 from keras import optimizers
+from sklearn.metrics import mean_squared_error
+
 
 
 TIME_STEPS = 60
@@ -108,3 +110,43 @@ csv_logger = CSVLogger('output' + '.log', append=True)
 history = lstm_model.fit(x_t, y_t, epochs=params["epochs"], verbose=2, batch_size=BATCH_SIZE,
                     shuffle=False, validation_data=(trim_dataset(x_val, BATCH_SIZE),
                     trim_dataset(y_val, BATCH_SIZE)), callbacks=[csv_logger])
+
+y_pred = lstm_model.predict(trim_dataset(x_test_t, BATCH_SIZE), batch_size=BATCH_SIZE)
+y_pred = y_pred.flatten()
+y_test_t = trim_dataset(y_test_t, BATCH_SIZE)
+error = mean_squared_error(y_test_t, y_pred)
+print("Error is", error, y_pred.shape, y_test_t.shape)
+print(y_pred[0:15])
+print(y_test_t[0:15])
+
+# convert the predicted value to range of real data
+y_pred_org = (y_pred * min_max_scaler.data_range_[3]) + min_max_scaler.data_min_[3]
+# min_max_scaler.inverse_transform(y_pred)
+y_test_t_org = (y_test_t * min_max_scaler.data_range_[3]) + min_max_scaler.data_min_[3]
+# min_max_scaler.inverse_transform(y_test_t)
+print(y_pred_org[0:15])
+print(y_test_t_org[0:15])
+
+# Visualize the training data
+from matplotlib import pyplot as plt
+plt.figure()
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('Model loss')
+plt.ylabel('Loss')
+plt.xlabel('Epoch')
+plt.legend(['Train', 'Test'], loc='upper left')
+plt.show()
+
+# Visualize the prediction
+from matplotlib import pyplot as plt
+plt.figure()
+plt.plot(y_pred_org)
+plt.plot(y_test_t_org)
+plt.title('Prediction vs Real Stock Price')
+plt.ylabel('Price')
+plt.xlabel('Days')
+plt.legend(['Prediction', 'Real'], loc='upper left')
+plt.show()
+plt.savefig(os.path.join(OUTPUT_PATH, 'pred_vs_real_BS'+str(BATCH_SIZE)+"_"+time.ctime()+'.png'))
+print_time("program completed ", stime)
