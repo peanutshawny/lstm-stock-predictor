@@ -20,7 +20,7 @@ BATCH_SIZE = 20
 
 params = {
     "batch_size": 20,  # 20<16<10, 25 was a bust
-    "epochs": 300,
+    "epochs": 1,
     "lr": 0.00010000,
     "time_steps": 60
 }
@@ -51,7 +51,8 @@ def trim_dataset(mat, batch_size):
     else:
         return mat
 
-df_ge = pd.read_csv("../data/sample/ge.us.txt", engine='python')
+df_ge = pd.read_csv("../data/sample/ge.training.us.txt", engine='python')
+df_ge_test = pd.read_csv("../data/sample/ge.test.us.txt", engine='python')
 df_ge.tail()
 
 #Plotting price history
@@ -79,7 +80,9 @@ print("checking if any null values are present\n", df_ge.isna().sum())
 
 #normalizing the data
 train_cols = ["Open","High","Low","Close","Volume"]
-df_train, df_test = train_test_split(df_ge, train_size=0.8, test_size=0.2, shuffle=False)
+#df_train, df_test = train_test_split(df_ge, train_size=0.8, test_size=0.2, shuffle=False)
+df_train = df_ge
+df_test = df_ge_test
 print("Train and Test size", len(df_train), len(df_test))
 # scale the feature MinMax, build array
 x = df_train.loc[:,train_cols].values
@@ -115,17 +118,23 @@ y_pred = lstm_model.predict(trim_dataset(x_test_t, BATCH_SIZE), batch_size=BATCH
 y_pred = y_pred.flatten()
 y_test_t = trim_dataset(y_test_t, BATCH_SIZE)
 error = mean_squared_error(y_test_t, y_pred)
+
 print("Error is", error, y_pred.shape, y_test_t.shape)
-print(y_pred[0:15])
-print(y_test_t[0:15])
+print(y_pred)
+print(y_test_t)
 
 # convert the predicted value to range of real data
 y_pred_org = (y_pred * min_max_scaler.data_range_[3]) + min_max_scaler.data_min_[3]
 # min_max_scaler.inverse_transform(y_pred)
 y_test_t_org = (y_test_t * min_max_scaler.data_range_[3]) + min_max_scaler.data_min_[3]
 # min_max_scaler.inverse_transform(y_test_t)
-print(y_pred_org[0:15])
-print(y_test_t_org[0:15])
+print (len(y_pred_org))
+print (len(y_test_t_org))
+#print(y_pred_org)
+#print(y_test_t_org)
+
+print(y_pred_org[-1])
+print(y_test_t_org[-1])
 
 # Visualize the training data
 from matplotlib import pyplot as plt
