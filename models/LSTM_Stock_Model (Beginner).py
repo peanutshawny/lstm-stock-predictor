@@ -50,7 +50,7 @@ out_seq = out_seq.reshape((len(out_seq), 1))
 # horizontally stack columns
 dataset = hstack((in_seq1, in_seq2, out_seq))
 # choose a number of time steps
-n_steps = 2538
+n_steps = 20
 # convert into input/output
 X, y = split_sequences(dataset, n_steps)
 # the dataset knows the number of features, e.g. 2
