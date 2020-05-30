@@ -33,7 +33,15 @@ df_td = pd.read_csv("../data/sample/ge.test.us.txt", engine='python')
 
 in_seq1 = df_ge["Close"]
 in_seq2 = df_ge["Open"]
-out_seq = array([in_seq1[i]-in_seq2[i] for i in range(len(in_seq1))])
+
+out_seq = []
+for i in range(len(in_seq1)):
+	if (in_seq1[i]-in_seq2[i] > 0):
+		out_val = 1
+	else:
+		out_val = 0
+	out_seq.append(out_val)
+out_seq = array(out_seq)
 
 # convert to [rows, columns] structure
 in_seq1 = in_seq1.values.reshape((len(in_seq1), 1))
@@ -42,7 +50,7 @@ out_seq = out_seq.reshape((len(out_seq), 1))
 # horizontally stack columns
 dataset = hstack((in_seq1, in_seq2, out_seq))
 # choose a number of time steps
-n_steps = 20
+n_steps = 2538
 # convert into input/output
 X, y = split_sequences(dataset, n_steps)
 # the dataset knows the number of features, e.g. 2
@@ -54,7 +62,7 @@ model.add(LSTM(100, activation='relu'))
 model.add(Dense(n_features))
 model.compile(optimizer='adam', loss='mse')
 # fit model
-model.fit(X, y, epochs=300, verbose=0)
+model.fit(X, y, epochs=1, verbose=0)
 # demonstrate prediction
 
 #x_input = array([[70,75,5], [80,85,5], [90,95,5]])
