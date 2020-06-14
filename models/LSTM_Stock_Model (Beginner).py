@@ -62,7 +62,7 @@ model.add(LSTM(100, activation='relu'))
 model.add(Dense(n_features))
 model.compile(optimizer='adam', loss='mse')
 # fit model
-model.fit(X, y, epochs=1, verbose=0)
+model.fit(X, y, epochs=50, verbose=0)
 # demonstrate prediction
 
 #x_input = array([[70,75,5], [80,85,5], [90,95,5]])
@@ -70,7 +70,7 @@ model.fit(X, y, epochs=1, verbose=0)
 
 t_seq1 = df_td["Close"]
 t_seq2 = df_td["Open"]
-t_out = array([t_seq1[i]-t_seq2[i] for i in range(len(t_seq1))])
+t_out = array([t_seq2[i]-t_seq1[i] for i in range(len(t_seq1))])
 
 x_input = []
 for i in range(len(t_seq1)):
@@ -83,3 +83,13 @@ x_input = array(x_input)
 x_input = x_input.reshape((1, n_steps, n_features))
 yhat = model.predict(x_input, verbose=0)
 print(yhat)
+
+#print(t_out)
+
+# if (yhat[2] < 0):
+# 	print("Stock price will drop")
+# elif (yhat[2] == 0):
+# 	print("Stock price will stay the same")
+# else:
+# 	print("Stock price will increase")
+
