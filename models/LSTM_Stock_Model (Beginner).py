@@ -22,8 +22,8 @@ def split_sequences(sequences, n_steps):
 		y.append(seq_y)
 	return array(X), array(y)
 
-df_ge = pd.read_csv("../data/sample/ge.training.us.txt", engine='python')
-df_td = pd.read_csv("../data/sample/ge.test.us.txt", engine='python')
+df_ge = pd.read_csv("../data/sample/sp500.training.txt", engine='python')
+df_td = pd.read_csv("../data/sample/sp500.test.txt", engine='python')
 
 
 # define input sequence
@@ -33,6 +33,8 @@ df_td = pd.read_csv("../data/sample/ge.test.us.txt", engine='python')
 
 in_seq1 = df_ge["Close"]
 in_seq2 = df_ge["Open"]
+in_seq3 = df_ge["GDP"]
+in_seq4 = df_ge["Fund_Rate"]
 
 out_seq = []
 for i in range(len(in_seq1)):
@@ -46,11 +48,15 @@ out_seq = array(out_seq)
 # convert to [rows, columns] structure
 in_seq1 = in_seq1.values.reshape((len(in_seq1), 1))
 in_seq2 = in_seq2.values.reshape((len(in_seq2), 1))
+in_seq3 = in_seq3.values.reshape((len(in_seq3), 1))
+in_seq4 = in_seq4.values.reshape((len(in_seq4), 1))
 out_seq = out_seq.reshape((len(out_seq), 1))
 # horizontally stack columns
-dataset = hstack((in_seq1, in_seq2, out_seq))
+#dataset = hstack((in_seq1, in_seq2, in_seq3, out_seq))
+dataset = hstack((in_seq1, in_seq2, in_seq3, in_seq4, out_seq))
+
 # choose a number of time steps
-n_steps = 20
+n_steps = 30
 # convert into input/output
 X, y = split_sequences(dataset, n_steps)
 # the dataset knows the number of features, e.g. 2
@@ -62,7 +68,7 @@ model.add(LSTM(100, activation='relu'))
 model.add(Dense(n_features))
 model.compile(optimizer='adam', loss='mse')
 # fit model
-model.fit(X, y, epochs=50, verbose=0)
+model.fit(X, y, epochs=100, verbose=0)
 # demonstrate prediction
 
 #x_input = array([[70,75,5], [80,85,5], [90,95,5]])
@@ -70,11 +76,14 @@ model.fit(X, y, epochs=50, verbose=0)
 
 t_seq1 = df_td["Close"]
 t_seq2 = df_td["Open"]
+t_seq3 = df_td["GDP"]
+t_seq4 = df_td["Fund_Rate"]
 t_out = array([t_seq2[i]-t_seq1[i] for i in range(len(t_seq1))])
 
 x_input = []
 for i in range(len(t_seq1)):
-	tempArray = [t_seq1[i], t_seq2[i], t_out[i]]
+	tempArray = [t_seq1[i], t_seq2[i],t_seq3[i],t_seq4[i], t_out[i]]
+	#tempArray = [t_seq1[i], t_seq2[i], t_seq3[i], t_seq4[i], t_out[i]]
 	x_input.append(tempArray)
 
 # print (x_input)
