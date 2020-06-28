@@ -3,12 +3,9 @@
 
 # importing
 import numpy as np
-import pandas as pd
 from bs4 import BeautifulSoup
 import requests
 import unicodedata
-import datetime
-
 import string
 import re
 import spacy
@@ -42,9 +39,9 @@ def clean_close(sp_df):
 # parsing text from 8-ks
 
 def get_soup(link):
-    """
+    '''
     function that returns soup object of a 8-k link
-    """
+    '''
     try:
         request = requests.get(link)
         soup = BeautifulSoup(request.content, 'html5lib', from_encoding='ascii')
@@ -56,15 +53,18 @@ def get_soup(link):
 
 
 def get_date(soup):
-    """
+    '''
     function that returns date of a soup object
-    """
+    '''
     try:
         date = soup.find('acceptance-datetime').string[:8]
 
+        # change date formatting to YYYY-MM-DD
+        date = date[:4] + '-' + date[4:6] + '-' + date[6:]
+
     # setting date as 00000000 if no date is found
     except AttributeError:
-        date = '00000000'
+        date = '0000-00-00'
 
     return date
 
@@ -78,9 +78,9 @@ sw = stopwords.words('english')
 
 
 def clean_text(link, date_list=date_list, sentiment_list=sentiment_list):
-    """
+    '''
     function that utilizes get_soup and get_date to process text, outputs sentiment scores and dates
-    """
+    '''
 
     # requesting the doc from link
     soup = get_soup(link)
@@ -106,7 +106,7 @@ def clean_text(link, date_list=date_list, sentiment_list=sentiment_list):
                 section = str(section.encode('utf-8'))
 
             # joining, removing unecessary characters, and truncating text
-            text = ''.join(section)
+            text = ''.join((section))
             text = re.sub('\s+', ' ', text).strip()
             text = text[:40000]
 
