@@ -1,5 +1,6 @@
 import React , {useEffect, useState} from 'react';
 import { Button } from 'react-bootstrap';
+import ApexChart from './Chart.jsx';
 
 function Home() {
   const [currentTime, setCurrentTime] = useState(0);
@@ -20,16 +21,18 @@ function Home() {
   }, []);
 
   return (
-    <div className="App">
-      <header className="App-header">
-
-        ... no changes in this part ...
-
-        <p>The current time is {currentTime}.</p>
-        <div className="mb-2">
-        <Button variant="primary">Primary</Button>{' '}
+    <div className="m-4">
+      <div className="App">
+        <header className="App-header">
+          <p>The current time is {currentTime}.</p>
+          <div className="mb-2">
+          <Button variant="primary" onClick={() => { alert("Button Clicked");}}>Test Button</Button>{' '}
+          <div className="mt-5 col-md-12">
+            <ApexChart></ApexChart>
+          </div>
+        </div>
+        </header>
       </div>
-      </header>
     </div>
   );
 }
