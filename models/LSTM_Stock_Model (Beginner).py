@@ -52,22 +52,27 @@ in_seq2 = in_seq2.values.reshape((len(in_seq2), 1))
 in_seq3 = in_seq3.values.reshape((len(in_seq3), 1))
 in_seq4 = in_seq4.values.reshape((len(in_seq4), 1))
 out_seq = out_seq.reshape((len(out_seq), 1))
+
 # horizontally stack columns
 # dataset = hstack((in_seq1, in_seq2, in_seq3, out_seq))
 dataset = hstack((in_seq1, in_seq2, in_seq3, in_seq4, out_seq))
 
 # choose a number of time steps
 n_steps = 30
+
 # convert into input/output
 X, y = split_sequences(dataset, n_steps)
+
 # the dataset knows the number of features, e.g. 2
 n_features = X.shape[2]
+
 # define model
 model = Sequential()
 model.add(LSTM(100, activation='relu', return_sequences=True, input_shape=(n_steps, n_features)))
 model.add(LSTM(100, activation='relu'))
 model.add(Dense(n_features))
 model.compile(optimizer='adam', loss='mse')
+
 # fit model
 model.fit(X, y, epochs=100, verbose=0)
 # demonstrate prediction
@@ -93,6 +98,9 @@ x_input = array(x_input)
 x_input = x_input.reshape((1, n_steps, n_features))
 yhat = model.predict(x_input, verbose=0)
 print(yhat)
+
+# saving model
+model.save('../models/trained_model')
 
 # print(t_out)
 
