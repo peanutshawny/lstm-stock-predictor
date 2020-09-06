@@ -17,34 +17,19 @@ from time import sleep
 
 # getting s&p price data from yahoo finance
 
-def get_yahoo_data():
-    # overriding with pandas datareader
+def get_yahoo_data(start='2015-05-01', end='2020-04-30'):
 
+    # overriding with pandas datareader
     yf.pdr_override()
+    standard_and_poor = '^GSPC'
 
     # finding s&p index ticker and getting 5 years of data
-
-    sp_df = pdr.get_data_yahoo('^GSPC', start='2015-05-01', end='2020-04-30').reset_index()
-
-    # splitting between month, day, and weekday
-
-    months = []
-    days = []
-    weekdays = []
-
-    for day in sp_df['Date']:
-        months.append(day.month)
-        days.append(day.day)
-        weekdays.append(day.weekday())
-
-    sp_df['Month'] = months
-    sp_df['Day_month'] = days
-    sp_df['Day_week'] = weekdays
+    sp_df = pdr.get_data_yahoo(standard_and_poor, start=start, end=end).reset_index()
 
     return sp_df
 
 
-def get_edgar_data():
+def get_edgar_data(start='20150501', end='20200430'):
     # getting CIK for every company in the s&p 500 from wikipedia
 
     wiki_url = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
@@ -64,8 +49,8 @@ def get_edgar_data():
                       'CIK': cik,
                       'type': '8-K',
                       'output': 'xml',
-                      'dateb': '20200430',
-                      'datea': '20150501',
+                      'dateb': end,
+                      'datea': start,
                       'start': '',
                       'count': '100'}
 
@@ -93,7 +78,6 @@ def get_edgar_data():
             doc_list = html_list.str.replace('-index.html', '.txt').values.tolist()
 
             # creating dataframe to append the link of each company
-
             df = pd.DataFrame({'cik': [cik] * len(doc_list),
                                'txt_link': doc_list})
 

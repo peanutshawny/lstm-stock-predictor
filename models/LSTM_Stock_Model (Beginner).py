@@ -89,7 +89,6 @@ t_out = array([t_seq2[i] - t_seq1[i] for i in range(len(t_seq1))])
 x_input = []
 for i in range(len(t_seq1)):
     tempArray = [t_seq1[i], t_seq2[i], t_seq3[i], t_seq4[i], t_out[i]]
-    # tempArray = [t_seq1[i], t_seq2[i], t_seq3[i], t_seq4[i], t_out[i]]
     x_input.append(tempArray)
 
 # print (x_input)
