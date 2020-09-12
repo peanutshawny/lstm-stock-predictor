@@ -15,6 +15,7 @@ CORS(app)
 # load in model
 model = keras.models.load_model('../models/trained_model')
 
+
 ##
 # API routes
 ##
@@ -38,15 +39,25 @@ def items(start, end):
 
 @app.route('/time')
 def get_current_time():
+    '''Function that gets the current time, used as a date input for items function'''
     return jsonify([{'time': time.time()}])
 
 
 @app.route('/api/predict')
 def get_predictions(close, open, GDP, fund_rate):
-    '''API for model predictions'''
+    '''Model predictions'''
     diff = open - close
     x_input = [close, open, GDP, fund_rate, diff]
     return jsonify([{'output': model.predict(x_input, verbose=0)}])
+
+
+@app.route('/api/wrapper')
+def wrapper(start, end):
+    '''Wrapper around items and get_predictions'''
+    data = items(start=start, end=end)
+    prediction = get_predictions(data)
+    return jsonify([{'prediction': prediction}])
+
 
 ##
 # View route
