@@ -39,6 +39,7 @@ in_seq4 = df_ge["Fund_Rate"]
 in_seq5 = df_ge["Neg"]
 in_seq6 = df_ge["Neu"]
 in_seq7 = df_ge["Pos"]
+in_seq8 = df_ge["Unemployement"]
 out_seq = []
 
 for i in range(len(in_seq1)):
@@ -57,12 +58,13 @@ in_seq4 = in_seq4.values.reshape((len(in_seq4), 1))
 in_seq5 = in_seq5.values.reshape((len(in_seq5), 1))
 in_seq6 = in_seq6.values.reshape((len(in_seq6), 1))
 in_seq7 = in_seq7.values.reshape((len(in_seq7), 1))
+in_seq8 = in_seq8.values.reshape((len(in_seq8), 1))
 
 out_seq = out_seq.reshape((len(out_seq), 1))
 
 # horizontally stack columns
 #dataset = hstack((in_seq1, in_seq2, in_seq3, in_seq4, in_seq5, out_seq))
-dataset = hstack((in_seq1, in_seq2, in_seq3, in_seq4, in_seq5, in_seq6, in_seq7, out_seq))
+dataset = hstack((in_seq1, in_seq2, in_seq3, in_seq4, in_seq5, in_seq6, in_seq7, in_seq8, out_seq))
 
 # choose a number of time steps
 n_steps = 30
@@ -94,11 +96,12 @@ t_seq4 = df_td["Fund_Rate"]
 t_seq5 = df_td["Neg"]
 t_seq6 = df_td["Neu"]
 t_seq7 = df_td["Pos"]
+t_seq8 = df_td["Unemployement"]
 t_out = array([t_seq2[i]-t_seq1[i] for i in range(len(t_seq1))])
 
 x_input = []
 for i in range(len(t_seq1)):
-	tempArray = [t_seq1[i], t_seq2[i],t_seq3[i], t_seq4[i], t_seq5[i], t_seq6[i], t_seq7[i], t_out[i]]
+	tempArray = [t_seq1[i], t_seq2[i],t_seq3[i], t_seq4[i], t_seq5[i], t_seq6[i], t_seq7[i], t_seq8[i], t_out[i]]
 	#tempArray = [t_seq1[i], t_seq2[i], t_seq3[i], t_seq4[i], t_seq5[i], t_out[i]]
 	x_input.append(tempArray)
 
