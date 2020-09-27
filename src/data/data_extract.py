@@ -2,13 +2,10 @@
 # coding: utf-8
 
 # importing
-import numpy as np
 import pandas as pd
 
 import yfinance as yf
 import pandas_datareader as pdr
-import csv
-import datetime
 
 import requests
 from bs4 import BeautifulSoup
