@@ -21,13 +21,6 @@ model = keras.models.load_model('../models/trained_model')
 # API routes
 ##
 
-
-@app.route('/time')
-def get_current_time():
-    """Current time, used as a date input for items function"""
-    return jsonify([{'time': time.time()}])
-
-
 @app.route('/api/items')
 def items(start, end):
     """Sample API route for data"""
@@ -58,8 +51,8 @@ def get_predictions(close, open, GDP, fund_rate, unemployment):
 
 
 @app.route('/api/wrapper')
-def wrapper(start, end):
-    """Wrapper around items and get_predictions"""
+def wrapper(start=time.time(), end=time.time()):
+    """Wrapper around items and get_predictions, current time used as inputs"""
     data = items(start=start, end=end)
     prediction = get_predictions(data)
     return jsonify([{'prediction': prediction}])
