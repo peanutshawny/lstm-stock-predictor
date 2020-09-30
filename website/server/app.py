@@ -1,11 +1,12 @@
 """server/app.py - main api app declaration"""
-import time
+from datetime import date, timedelta
 from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 
 from tensorflow import keras
 
-from data_extract import get_yahoo_data, get_edgar_data
+from data_extract import get_yahoo_data, get_edgar_data, get_current_date
+from data_clean import clean_text
 from f_apiRequest import getGDP, getFund_Rate, getUnemployment
 
 # main wrapper for app creation
@@ -22,11 +23,18 @@ model = keras.models.load_model('../models/trained_model')
 ##
 
 @app.route('/api/items')
-def items(start, end):
+def items():
     """Sample API route for data"""
 
+    # formatting dates to match required date inputs of each function
+    yahoo_date = get_current_date('yahoo')
+
+    edgar_date_range = get_current_date('edgar')
+    edgar_start_date = edgar_date_range[0]
+    edgar_end_date = edgar_date_range[1]
+
     # price data for the date entered, returns a pandas dataframe
-    price_data = get_yahoo_data(start=start, end=end)
+    price_data = get_yahoo_data(start=yahoo_date, end=yahoo_date)
 
     # extract open and close from dataframe on specific date, getting latest gdp, fund rate, and unemployment
     open_price = price_data['Open'][0]
@@ -34,6 +42,11 @@ def items(start, end):
     gdp = getGDP()
     fund_rate = getFund_Rate()
     unemployment = getUnemployment()
+
+    # 8-k links
+    links = get_edgar_data(start=edgar_start_date, end=edgar_end_date)
+
+    # processing to return sentiment (pos, neg, and neu)
 
     return jsonify([{'open': open_price,
                      'close': close_price,
@@ -51,9 +64,9 @@ def get_predictions(close, open, GDP, fund_rate, unemployment):
 
 
 @app.route('/api/wrapper')
-def wrapper(start=time.time(), end=time.time()):
+def wrapper():
     """Wrapper around items and get_predictions, current time used as inputs"""
-    data = items(start=start, end=end)
+    data = items()
     prediction = get_predictions(data)
     return jsonify([{'prediction': prediction}])
 

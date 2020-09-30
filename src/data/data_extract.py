@@ -10,12 +10,12 @@ import pandas_datareader as pdr
 import requests
 from bs4 import BeautifulSoup
 from time import sleep
+from datetime import date, timedelta
 
 
 # getting s&p price data from yahoo finance
 
-def get_yahoo_data(start='2015-05-01', end='2020-04-30'):
-
+def get_yahoo_data(start, end):
     # overriding with pandas datareader
     yf.pdr_override()
     standard_and_poor = '^GSPC'
@@ -26,7 +26,7 @@ def get_yahoo_data(start='2015-05-01', end='2020-04-30'):
     return sp_df
 
 
-def get_edgar_data(start='20150501', end='20200430'):
+def get_edgar_data(start, end):
     # getting CIK for every company in the s&p 500 from wikipedia
 
     wiki_url = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
@@ -84,3 +84,21 @@ def get_edgar_data(start='20150501', end='20200430'):
             sleep(.1)
 
     return doc_df
+
+
+def get_current_date(extract_method):
+    # function that returns correctly format date inputs given required function params
+
+    current_date = date.today()
+    if extract_method == 'edgar':
+        # calculates a 15-day date range to search for 8-ks
+
+        start = current_date.strftime('%Y%m%d')
+        end = current_date - timedelta(days=15)
+        end = end.strftime('%Y%m%d')
+        return [start, end]
+
+    elif extract_method == 'yahoo':
+        # yahoo finance only needs one date input
+
+        return current_date.strftime('%Y-%m-%d')
