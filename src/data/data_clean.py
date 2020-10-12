@@ -128,7 +128,6 @@ def clean_text(link, date_list=date_list, sentiment_list=sentiment_list):
     # output blank tokens and 0 sentiment for any link in case of error
 
     except:
-        doc = []
         sentiment = np.ndarray({'neg': 0, 'neu': 0, 'pos': 0, 'compound': 0})
         sentiment_list = np.append(sentiment_list, sentiment)
 
