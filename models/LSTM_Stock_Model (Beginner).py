@@ -10,6 +10,11 @@ import pandas as pd
 
 # split a multivariate sequence into samples
 def split_sequences(sequences, n_steps):
+    """
+    :param sequences:
+    :param n_steps:
+    :return:
+    """
     X, y = list(), list()
     for i in range(len(sequences)):
         # find the end of this pattern
@@ -63,7 +68,6 @@ in_seq8 = in_seq8.values.reshape((len(in_seq8), 1))
 out_seq = out_seq.reshape((len(out_seq), 1))
 
 # horizontally stack columns
-# dataset = hstack((in_seq1, in_seq2, in_seq3, in_seq4, in_seq5, out_seq))
 dataset = hstack((in_seq1, in_seq2, in_seq3, in_seq4, in_seq5, in_seq6, in_seq7, in_seq8, out_seq))
 
 # choose a number of time steps
@@ -111,12 +115,3 @@ print(yhat)
 
 # saving model
 model.save('../models/trained_model')
-
-# print(t_out)
-
-# if (yhat[2] < 0):
-# 	print("Stock price will drop")
-# elif (yhat[2] == 0):
-# 	print("Stock price will stay the same")
-# else:
-# 	print("Stock price will increase")
