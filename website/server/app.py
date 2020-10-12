@@ -82,3 +82,7 @@ def index(path):
     """Return index.html for all non-api routes"""
     # pylint: disable=unused-argument
     return send_from_directory(app.static_folder, 'index.html')
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
