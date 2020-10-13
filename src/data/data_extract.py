@@ -98,7 +98,7 @@ def get_current_date(extract_method):
         # calculates a 15-day date range to search for 8-ks
 
         start = current_date.strftime('%Y%m%d')
-        end = current_date - timedelta(days=15)
+        end = current_date - timedelta(days=10)
         end = end.strftime('%Y%m%d')
         return [start, end]
 

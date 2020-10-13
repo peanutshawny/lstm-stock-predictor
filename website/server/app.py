@@ -1,6 +1,7 @@
 """server/app.py - main api app declaration"""
 from datetime import date, timedelta
 import numpy as np
+import pandas as pd
 from bs4 import BeautifulSoup
 import requests
 import unicodedata
@@ -37,7 +38,7 @@ model = keras.models.load_model('../models/trained_model')
 
 @app.route('/api/items')
 def items():
-    """Sample API route for data"""
+    """API route for data"""
 
     # formatting dates to match required date inputs of each function
     yahoo_date = get_current_date('yahoo')
@@ -52,6 +53,7 @@ def items():
     # extract open and close from dataframe on specific date, getting latest gdp, fund rate, and unemployment
     open_price = price_data['Open'][0]
     close_price = price_data['Close'][0]
+    diff = open_price - close_price
     gdp = getGDP()
     fund_rate = getFund_Rate()
     unemployment = getUnemployment()
@@ -62,18 +64,30 @@ def items():
 
     # processing to return sentiment (pos, neg, and neu)
 
-    return jsonify([{'open': open_price,
-                     'close': close_price,
+    return jsonify([{'close': close_price,
+                     'open': open_price,
                      'gdp': gdp,
-                     'fund rate': fund_rate,
-                     'unemployment': unemployment}])
+                     'fund_rate': fund_rate,
+                     'neg': sentiment['neg'],
+                     'neu': sentiment['neu'],
+                     'pos': sentiment['pos'],
+                     'unemployment': unemployment,
+                     'diff': diff}])
 
 
 @app.route('/api/predict')
-def get_predictions(close, open, GDP, fund_rate, unemployment):
+def get_predictions(features):
     """Model predictions"""
-    diff = open - close
-    x_input = [close, open, GDP, fund_rate, unemployment, diff]
+
+    x_input = [features['close'],
+               features['open'],
+               features['gdp'],
+               features['fund_rate'],
+               features['neg'],
+               features['neu'],
+               features['pos'],
+               features['diff']]
+
     return jsonify([{'output': model.predict(x_input, verbose=0)}])
 
 
