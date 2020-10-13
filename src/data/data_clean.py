@@ -39,9 +39,9 @@ def clean_close(sp_df):
 # parsing text from 8-ks
 
 def get_soup(link):
-    '''
+    """
     function that returns soup object of a 8-k link
-    '''
+    """
     try:
         request = requests.get(link)
         soup = BeautifulSoup(request.content, 'html5lib', from_encoding='ascii')
@@ -53,9 +53,9 @@ def get_soup(link):
 
 
 def get_date(soup):
-    '''
+    """
     function that returns date of a soup object
-    '''
+    """
     try:
         date = soup.find('acceptance-datetime').string[:8]
 
@@ -78,9 +78,9 @@ sw = stopwords.words('english')
 
 
 def clean_text(link, date_list=date_list, sentiment_list=sentiment_list):
-    '''
+    """
     function that utilizes get_soup and get_date to process text, outputs sentiment scores and dates
-    '''
+    """
 
     # requesting the doc from link
     soup = get_soup(link)
@@ -128,6 +128,8 @@ def clean_text(link, date_list=date_list, sentiment_list=sentiment_list):
     # output blank tokens and 0 sentiment for any link in case of error
 
     except:
+
+        # appends empty sentiment when no sentiment it present
         sentiment = np.ndarray({'neg': 0, 'neu': 0, 'pos': 0, 'compound': 0})
         sentiment_list = np.append(sentiment_list, sentiment)
 

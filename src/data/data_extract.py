@@ -33,6 +33,9 @@ def get_edgar_data(start, end):
     cik_df = pd.read_html(wiki_url, header=0, index_col=0)[0]
     cik_list = list(cik_df['CIK'])
 
+    # removing nan ciks from list
+    cik_list = [cik for cik in cik_list if cik == cik]
+
     # creating empty dataframe to append all other dataframes with 8-k links
     doc_df = pd.DataFrame()
 
@@ -41,9 +44,10 @@ def get_edgar_data(start, end):
         try:
 
             # defining endpoint and parameters for every company in the s&p
+            # cik must be expressed as an integer
             url = 'https://www.sec.gov/cgi-bin/browse-edgar'
             params = {'action': 'getcompany',
-                      'CIK': cik,
+                      'CIK': int(cik),
                       'type': '8-K',
                       'output': 'xml',
                       'dateb': end,
