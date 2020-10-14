@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
+
 # gets the latest GDP
 def getGDP():
     page = requests.get("https://www.bea.gov/data/gdp/gross-domestic-product")
@@ -9,6 +10,7 @@ def getGDP():
         0].get_text()
     gdpValue = gdpValue.replace("%", "")
     return (float(gdpValue))
+
 
 # gets the latest fund rate
 def getFund_Rate():
@@ -19,6 +21,7 @@ def getFund_Rate():
     fundValue = fundValue.split("<td>")
     fundValue = fundValue[2].replace("</td>", "")
     return (float(fundValue))
+
 
 # gets the latest unemployment numbers
 def getUmemployment():
