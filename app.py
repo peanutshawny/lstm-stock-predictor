@@ -4,10 +4,11 @@ from nltk.corpus import stopwords
 
 from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
+from keras.models import load_model
 
-from data_extract import get_yahoo_data, get_edgar_data, get_current_date
-from data_clean import clean_text
-from f_apiRequest import getGDP, getFund_Rate, getUnemployment
+from src.data.data_extract import get_yahoo_data, get_edgar_data, get_current_date
+from src.data.data_clean import clean_text
+from src.data.f_apiRequest import getGDP, getFund_Rate, getUnemployment
 
 # main wrapper for app creation
 app = Flask(__name__, static_folder='../build')
@@ -15,7 +16,7 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 CORS(app)
 
 # load in model
-model = keras.models.load_model('../models/trained_model')
+model = load_model('models/trained_model')
 
 
 ##
@@ -75,7 +76,7 @@ def get_predictions(features):
                features['diff']]
 
     # choose a number of time steps and features
-    n_steps = 30
+    n_steps = 10
     n_features = 2
 
     x_input = array(x_input)

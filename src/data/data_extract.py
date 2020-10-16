@@ -1,16 +1,15 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+from datetime import date, timedelta
+from time import sleep
+
 # importing
 import pandas as pd
-
-import yfinance as yf
 import pandas_datareader as pdr
-
 import requests
+import yfinance as yf
 from bs4 import BeautifulSoup
-from time import sleep
-from datetime import date, timedelta
 
 
 # getting s&p price data from yahoo finance

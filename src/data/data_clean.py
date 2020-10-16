@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import re
+import string
+import unicodedata
+
 # importing
 import numpy as np
 import pandas as pd
-from bs4 import BeautifulSoup
 import requests
-import unicodedata
-import string
-import re
 import spacy
+from bs4 import BeautifulSoup
 
 nlp = spacy.load('en_core_web_sm')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer

@@ -2,15 +2,15 @@
 # coding: utf-8
 
 
-import pandas as pd
-import numpy as np
-from bs4 import BeautifulSoup
-import requests
+import re
+import string
 import unicodedata
 
-import string
-import re
+import numpy as np
+import pandas as pd
+import requests
 import spacy
+from bs4 import BeautifulSoup
 
 nlp = spacy.load('en_core_web_sm')
 

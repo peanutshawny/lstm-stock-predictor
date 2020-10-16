@@ -24,13 +24,13 @@ def getFund_Rate():
 
 
 # gets the latest unemployment numbers
-def getUmemployment():
+def getUnemployment():
     page = requests.get("https://fred.stlouisfed.org/series/UNRATE")
     soup = BeautifulSoup(page.content, 'html.parser')
     uRate = soup.find_all(class_='series-meta-observation-value')[0].get_text()
     return (float(uRate))
 
 
-print("Current GDP: " + str(getGDP()))
-print("Current Fund Rate: " + str(getFund_Rate()))
-print("Current Unemployement Rate: " + str(getUmemployement()))
+# print("Current GDP: " + str(getGDP()))
+# print("Current Fund Rate: " + str(getFund_Rate()))
+# print("Current Unemployment Rate: " + str(getUnemployment()))
