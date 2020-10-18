@@ -94,6 +94,5 @@ def clean_text(link):
 
     # transposing each type of sentiment (pos, neg, neu) into separate features
     sentiment_df = pd.DataFrame({'sentiment': sentiment_list})
-    sentiment_df = sentiment_df['sentiment'].apply(pd.Series)
 
     return sentiment_df

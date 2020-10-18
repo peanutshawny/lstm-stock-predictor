@@ -17,10 +17,9 @@ from bs4 import BeautifulSoup
 def get_yahoo_data(start, end):
     # overriding with pandas datareader
     yf.pdr_override()
-    standard_and_poor = '^GSPC'
 
     # finding s&p index ticker and getting 5 years of data
-    sp_df = pdr.get_data_yahoo(standard_and_poor, start=start, end=end).reset_index()
+    sp_df = pdr.get_data_yahoo('^GSPC', start=start, end=end).reset_index()
 
     return sp_df
 
@@ -103,5 +102,7 @@ def get_current_date(extract_method):
 
     elif extract_method == 'yahoo':
         # yahoo finance only needs one date input
+        # yahoo updates data one day behind
+        current_date = current_date - timedelta(days=1)
 
         return current_date.strftime('%Y-%m-%d')

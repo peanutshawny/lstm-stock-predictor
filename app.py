@@ -1,4 +1,5 @@
 """server/app.py - main api app declaration"""
+import pandas as pd
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from nltk.corpus import stopwords
 
@@ -45,9 +46,11 @@ def items():
     fund_rate = getFund_Rate()
     unemployment = getUnemployment()
 
-    # 8-k links
+    # 8-k links extracting and cleaning to get sentiment
     links = get_edgar_data(start=edgar_start_date, end=edgar_end_date)
     sentiment = links['txt_link'].map(clean_text)
+    sentiment = pd.concat(sentiment.to_list())
+    sentiment = pd.concat([sentiment.drop(['sentiment'], axis=1), sentiment['sentiment'].apply(pd.Series)], axis=1)
 
     # return average of all sentiment types
     neg = sentiment['neg'].mean()
