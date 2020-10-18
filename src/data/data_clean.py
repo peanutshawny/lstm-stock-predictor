@@ -33,18 +33,18 @@ def get_soup(link):
     return soup
 
 
-# empty numpy arrays for sentiment
-sentiment_list = np.empty(shape=0, dtype=object)
-
 # cleaning text by removing punctuation and stopwords, as well as lemmatization
 punctuations = string.punctuation
 sw = stopwords.words('english')
 
 
-def clean_text(link, sentiment_list=sentiment_list):
+def clean_text(link):
     """
     function that generates a soup to process text and output sentiment scores
     """
+
+    # empty list for sentiment data
+    sentiment_list = np.empty(shape=0, dtype=object)
 
     # requesting the doc from link
     soup = get_soup(link)
@@ -96,9 +96,4 @@ def clean_text(link, sentiment_list=sentiment_list):
     sentiment_df = pd.DataFrame({'sentiment': sentiment_list})
     sentiment_df = sentiment_df['sentiment'].apply(pd.Series)
 
-    # return average of all sentiment types
-    pos = sentiment_df['pos'].mean()
-    neg = sentiment_df['neg'].mean()
-    neu = sentiment_df['neu'].mean()
-
-    return {'pos': pos, 'neg': neg, 'neu': neu}
+    return sentiment_df

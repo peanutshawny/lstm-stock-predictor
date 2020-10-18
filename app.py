@@ -47,17 +47,20 @@ def items():
 
     # 8-k links
     links = get_edgar_data(start=edgar_start_date, end=edgar_end_date)
-    sentiment = clean_text(links)
+    sentiment = links['txt_link'].map(clean_text)
 
-    # processing to return sentiment (pos, neg, and neu)
+    # return average of all sentiment types
+    neg = sentiment['neg'].mean()
+    neu = sentiment['neu'].mean()
+    pos = sentiment['pos'].mean()
 
     return jsonify([{'close': close_price,
                      'open': open_price,
                      'gdp': gdp,
                      'fund_rate': fund_rate,
-                     'neg': sentiment['neg'],
-                     'neu': sentiment['neu'],
-                     'pos': sentiment['pos'],
+                     'neg': neg,
+                     'neu': neu,
+                     'pos': pos,
                      'unemployment': unemployment,
                      'diff': diff}])
 
