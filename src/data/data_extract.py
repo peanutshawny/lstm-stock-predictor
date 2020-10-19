@@ -95,9 +95,9 @@ def get_current_date(extract_method):
     if extract_method == 'edgar':
         # calculates a 15-day date range to search for 8-ks
 
-        start = current_date.strftime('%Y%m%d')
-        end = current_date - timedelta(days=10)
-        end = end.strftime('%Y%m%d')
+        end = current_date.strftime('%Y%m%d')
+        start = current_date - timedelta(days=8)
+        start = start.strftime('%Y%m%d')
         return [start, end]
 
     elif extract_method == 'yahoo':

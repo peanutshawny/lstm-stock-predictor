@@ -64,6 +64,7 @@ def items():
                      'neg': neg,
                      'neu': neu,
                      'pos': pos,
+                     # 'test': str(sentiment),
                      'unemployment': unemployment,
                      'diff': diff}])
 
