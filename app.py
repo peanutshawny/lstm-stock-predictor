@@ -1,5 +1,7 @@
 """server/app.py - main api app declaration"""
 import pandas as pd
+from numpy import array
+import requests
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from nltk.corpus import stopwords
 
@@ -24,7 +26,7 @@ model = load_model('models/trained_model')
 # API routes
 ##
 
-@app.route('/api/items')
+# @app.route('/api/items')
 def items():
     """API route for data"""
 
@@ -57,47 +59,40 @@ def items():
     neu = sentiment['neu'].mean()
     pos = sentiment['pos'].mean()
 
-    return jsonify([{'close': close_price,
-                     'open': open_price,
-                     'gdp': gdp,
-                     'fund_rate': fund_rate,
-                     'neg': neg,
-                     'neu': neu,
-                     'pos': pos,
-                     # 'test': str(sentiment),
-                     'unemployment': unemployment,
-                     'diff': diff}])
+    return {'close': close_price,
+            'open': open_price,
+            'gdp': gdp,
+            'fund_rate': fund_rate,
+            'neg': neg,
+            'neu': neu,
+            'pos': pos,
+            'unemployment': unemployment,
+            'diff': diff}
 
 
 @app.route('/api/predict')
-def get_predictions(features):
+def get_predictions():
     """Model predictions"""
+    # features = items()
+    # x_input = [features['close'],
+    #            features['open'],
+    #            features['gdp'],
+    #            features['fund_rate'],
+    #            features['neg'],
+    #            features['neu'],
+    #            features['pos'],
+    #            features['diff']]
 
-    x_input = [features['close'],
-               features['open'],
-               features['gdp'],
-               features['fund_rate'],
-               features['neg'],
-               features['neu'],
-               features['pos'],
-               features['diff']]
+    x_input = [1, 1, 1, 1, 1, 1, 1, 1]
 
     # choose a number of time steps and features
     n_steps = 10
     n_features = 2
 
     x_input = array(x_input)
-    x_input = x_input.reshape((1, n_steps, n_features))
+    # x_input = x_input.reshape((1, n_steps, n_features))
 
     return jsonify([{'output': model.predict(x_input, verbose=0)}])
-
-
-@app.route('/api/wrapper')
-def wrapper():
-    """Wrapper around items and get_predictions, current time used as inputs"""
-    data = items()
-    prediction = get_predictions(data)
-    return jsonify([{'prediction': prediction}])
 
 
 ##
