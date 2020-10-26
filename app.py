@@ -2,6 +2,7 @@
 import pandas as pd
 from numpy import array
 import requests
+import json
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from nltk.corpus import stopwords
 
@@ -73,26 +74,29 @@ def items():
 @app.route('/api/predict')
 def get_predictions():
     """Model predictions"""
-    # features = items()
-    # x_input = [features['close'],
-    #            features['open'],
-    #            features['gdp'],
-    #            features['fund_rate'],
-    #            features['neg'],
-    #            features['neu'],
-    #            features['pos'],
-    #            features['diff']]
-
-    x_input = [1, 1, 1, 1, 1, 1, 1, 1]
+    features = items()
+    x_input = [features['close'],
+               features['open'],
+               features['gdp'],
+               features['fund_rate'],
+               features['neg'],
+               features['neu'],
+               features['pos'],
+               features['unemployment'],
+               features['diff']]
 
     # choose a number of time steps and features
-    n_steps = 10
-    n_features = 2
+    n_steps = 1
+    n_features = 9
 
     x_input = array(x_input)
-    # x_input = x_input.reshape((1, n_steps, n_features))
+    x_input = x_input.reshape((1, n_steps, n_features))
 
-    return jsonify([{'output': model.predict(x_input, verbose=0)}])
+    # close price prediction is in position 1
+    yhat = model.predict(x_input, verbose=0)
+    yhat = yhat[0][1]
+
+    return jsonify([{'output': json.dumps(yhat.item())}])
 
 
 ##
