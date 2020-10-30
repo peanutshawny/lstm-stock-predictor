@@ -59,6 +59,9 @@ target/
 # DotEnv configuration
 .env
 
+# AWS Config
+key_config.py
+
 # Database
 *.db
 *.rdb

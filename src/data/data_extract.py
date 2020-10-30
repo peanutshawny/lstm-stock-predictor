@@ -103,6 +103,6 @@ def get_current_date(extract_method):
     elif extract_method == 'yahoo':
         # yahoo finance only needs one date input
         # yahoo updates data one day behind
-        current_date = current_date - timedelta(days=1)
+       # current_date = current_date - timedelta(days=1)
 
         return current_date.strftime('%Y-%m-%d')
