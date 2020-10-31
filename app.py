@@ -1,17 +1,16 @@
 """server/app.py - main api app declaration"""
-import pandas as pd
-from numpy import array
-import requests
-import json
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
-from nltk.corpus import stopwords
+import boto3
+import key_config as keys
 
+import pandas as pd
 from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 from keras.models import load_model
+from numpy import array
+import json
 
-from src.data.data_extract import get_yahoo_data, get_edgar_data, get_current_date
 from src.data.data_clean import clean_text
+from src.data.data_extract import get_yahoo_data, get_edgar_data, get_current_date
 from src.data.f_apiRequest import getGDP, getFund_Rate, getUnemployment
 
 # main wrapper for app creation
@@ -22,12 +21,11 @@ CORS(app)
 # load in model
 model = load_model('models/trained_model')
 
+# connect to database
+DB = boto3.resource('dynamodb', region_name='us-west-2')
+table = DB.Table('stock_db')
 
-##
-# API routes
-##
 
-# @app.route('/api/items')
 def items():
     """API route for data"""
 
@@ -70,6 +68,10 @@ def items():
             'unemployment': unemployment,
             'diff': diff}
 
+
+##
+# API routes
+##
 
 @app.route('/api/predict')
 def get_predictions():
