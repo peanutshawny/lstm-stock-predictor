@@ -22,12 +22,12 @@ CORS(app)
 model = load_model('models/trained_model')
 
 # connect to database
-DB = boto3.resource('dynamodb', region_name='us-west-2')
+DB = boto3.client('dynamodb', region_name='us-west-2')
 table = DB.Table('stock_db')
 
 
 def items():
-    """API route for data"""
+    """function to extract all data"""
 
     # formatting dates to match required date inputs of each function
     yahoo_date = get_current_date('yahoo')
@@ -58,7 +58,8 @@ def items():
     neu = sentiment['neu'].mean()
     pos = sentiment['pos'].mean()
 
-    return {'close': close_price,
+    return {'date': yahoo_date
+            'close': close_price,
             'open': open_price,
             'gdp': gdp,
             'fund_rate': fund_rate,
@@ -67,6 +68,25 @@ def items():
             'pos': pos,
             'unemployment': unemployment,
             'diff': diff}
+
+
+def update_db():
+    """function to put data into db"""
+    data = items()
+    table.put_item(
+        Item={
+            'date': data['date'],
+            'close': data['close'],
+            'open': data['open'],
+            'gdp': data['gdp'],
+            'fund_rate': data['fund_rate'],
+            'neg': data['neg'],
+            'neu': data['neu'],
+            'pos': data['pos'],
+            'unemployment': data['unemployment'],
+            'diff': data['diff']
+        }
+    )
 
 
 ##

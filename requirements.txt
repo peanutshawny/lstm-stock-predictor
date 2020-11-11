@@ -1,3 +1,4 @@
+boto3
 numpy
 keras
 pandas
