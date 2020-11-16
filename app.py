@@ -22,7 +22,7 @@ CORS(app)
 model = load_model('models/trained_model')
 
 # connect to database
-DB = boto3.client('dynamodb', region_name='us-west-2')
+DB = boto3.resource('dynamodb', region_name='us-west-2')
 table = DB.Table('stock_db')
 
 
@@ -58,7 +58,7 @@ def items():
     neu = sentiment['neu'].mean()
     pos = sentiment['pos'].mean()
 
-    return {'date': yahoo_date
+    return {'date': yahoo_date,
             'close': close_price,
             'open': open_price,
             'gdp': gdp,
@@ -70,6 +70,11 @@ def items():
             'diff': diff}
 
 
+##
+# API routes
+##
+
+@app.route('/api/db_update')
 def update_db():
     """function to put data into db"""
     data = items()
@@ -88,10 +93,17 @@ def update_db():
         }
     )
 
+    return jsonify([{'date': data['date'],
+                     'close': data['close'],
+                     'open': data['open'],
+                     'gdp': data['gdp'],
+                     'fund_rate': data['fund_rate'],
+                     'neg': data['neg'],
+                     'neu': data['neu'],
+                     'pos': data['pos'],
+                     'unemployment': data['unemployment'],
+                     'diff': data['diff']}])
 
-##
-# API routes
-##
 
 @app.route('/api/predict')
 def get_predictions():
