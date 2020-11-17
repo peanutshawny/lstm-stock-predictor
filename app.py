@@ -1,6 +1,5 @@
 """server/app.py - main api app declaration"""
 import boto3
-import key_config as keys
 
 import pandas as pd
 from flask import Flask, jsonify, send_from_directory
@@ -22,7 +21,7 @@ CORS(app)
 model = load_model('models/trained_model')
 
 # connect to database
-DB = boto3.resource('dynamodb', region_name='us-west-2')
+DB = boto3.resource('dynamodb')
 table = DB.Table('stock_db')
 
 
