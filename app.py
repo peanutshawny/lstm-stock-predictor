@@ -6,6 +6,7 @@ from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 from keras.models import load_model
 from numpy import array
+from decimal import Decimal
 import json
 
 from src.data.data_clean import clean_text
@@ -77,31 +78,27 @@ def items():
 def update_db():
     """function to put data into db"""
     data = items()
+
+    # converting dict values to decimal
+    decs = {key: Decimal(str(value)) for key, value in data.items() if key != 'date'}
+
+    # putting items into stock_db table
     table.put_item(
         Item={
             'date': data['date'],
-            'close': data['close'],
-            'open': data['open'],
-            'gdp': data['gdp'],
-            'fund_rate': data['fund_rate'],
-            'neg': data['neg'],
-            'neu': data['neu'],
-            'pos': data['pos'],
-            'unemployment': data['unemployment'],
-            'diff': data['diff']
+            'close': decs['close'],
+            'open': decs['open'],
+            'gdp': decs['gdp'],
+            'fund_rate': decs['fund_rate'],
+            'neg': decs['neg'],
+            'neu': decs['neu'],
+            'pos': decs['pos'],
+            'unemployment': decs['unemployment'],
+            'diff': decs['diff']
         }
     )
 
-    return jsonify([{'date': data['date'],
-                     'close': data['close'],
-                     'open': data['open'],
-                     'gdp': data['gdp'],
-                     'fund_rate': data['fund_rate'],
-                     'neg': data['neg'],
-                     'neu': data['neu'],
-                     'pos': data['pos'],
-                     'unemployment': data['unemployment'],
-                     'diff': data['diff']}])
+    return jsonify('update successful')
 
 
 @app.route('/api/predict')
