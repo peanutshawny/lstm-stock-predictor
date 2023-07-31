@@ -151,6 +151,8 @@ plt.legend(['Train', 'Test'], loc='upper left')
 plt.show()
 
 # Visualize the prediction
+OUTPUT_PATH = ''
+import time
 from matplotlib import pyplot as plt
 plt.figure()
 plt.plot(y_pred_org)
@@ -159,6 +161,6 @@ plt.title('Prediction vs Real Stock Price')
 plt.ylabel('Price')
 plt.xlabel('Days')
 plt.legend(['Prediction', 'Real'], loc='upper left')
-plt.show()
 plt.savefig(os.path.join(OUTPUT_PATH, 'pred_vs_real_BS'+str(BATCH_SIZE)+"_"+time.ctime()+'.png'))
-print_time("program completed ", stime)
+plt.show()
+print("program completed ", time.ctime())
