@@ -31,6 +31,9 @@ def build_timeseries(mat, y_col_index):
     # total number of time-series samples would be len(mat) - TIME_STEPS
     dim_0 = mat.shape[0] - TIME_STEPS
     dim_1 = mat.shape[1]
+
+    assert dim_0 > 0, "mat.shape[0] must be large than TIME_STEPS"
+    
     x = np.zeros((dim_0, TIME_STEPS, dim_1))
     y = np.zeros((dim_0,))
     
